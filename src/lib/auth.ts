@@ -10,6 +10,8 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client,
   }),
+  trustedOrigins: ["http://localhost:5000"],
+  secret: process.env.BETTER_AUTH_SECRET,
 
   user: {
     additionalFields: {

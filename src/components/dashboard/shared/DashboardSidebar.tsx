@@ -8,6 +8,7 @@ import {
   CalendarCheck,
   CalendarDays,
   ChevronsUpDown,
+  CreditCard,
   Heart,
   House,
   LayoutDashboard,
@@ -78,6 +79,11 @@ const roleBasedSidebarItems: Record<
       title: "My Rentals",
       href: "/dashboard/customer/rentals",
       icon: CalendarCheck,
+    },
+    {
+      title: "Payment History",
+      href: "/dashboard/customer/payment-history",
+      icon: CreditCard,
     },
     {
       title: "Favorites",
