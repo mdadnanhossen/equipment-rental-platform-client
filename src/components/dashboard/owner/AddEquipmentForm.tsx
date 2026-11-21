@@ -7,6 +7,7 @@ import type {
   EquipmentCondition,
   EquipmentImage,
   CreateEquipmentPayload,
+  RentalType,
 } from "@/types/equipment";
 
 const API_URL =
@@ -22,22 +23,26 @@ const categories = [
   "Other",
 ];
 
+const initialFormData = {
+  title: "",
+  description: "",
+  category: "",
+  brand: "",
+  model: "",
+  rentalType: "daily" as RentalType,
+  pricePerDay: "",
+  pricePerWeek: "",
+  pricePerMonth: "",
+  securityDeposit: "",
+  condition: "good" as EquipmentCondition,
+  city: "",
+  address: "",
+};
+
 export default function AddEquipmentForm() {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    category: "",
-    brand: "",
-    model: "",
-    pricePerDay: "",
-    securityDeposit: "",
-    condition: "good" as EquipmentCondition,
-    city: "",
-    address: "",
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   const [files, setFiles] = useState<File[]>([]);
-  const [images, setImages] = useState<EquipmentImage[]>([]);
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -48,9 +53,11 @@ export default function AddEquipmentForm() {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
+    const { name, value } = e.target;
+
     setFormData((previous) => ({
       ...previous,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
   };
 
@@ -73,11 +80,13 @@ export default function AddEquipmentForm() {
 
     if (validFiles.length !== selectedFiles.length) {
       setError("Only JPG, PNG, WEBP and GIF images are allowed.");
+      e.target.value = "";
       return;
     }
 
     if (selectedFiles.some((file) => file.size > 5 * 1024 * 1024)) {
       setError("Each image must be smaller than 5 MB.");
+      e.target.value = "";
       return;
     }
 
@@ -92,6 +101,34 @@ export default function AddEquipmentForm() {
     );
   };
 
+  const getPriceField = () => {
+    switch (formData.rentalType) {
+      case "weekly":
+        return {
+          name: "pricePerWeek" as const,
+          label: "Price Per Week",
+          placeholder: "5000",
+          value: formData.pricePerWeek,
+        };
+
+      case "monthly":
+        return {
+          name: "pricePerMonth" as const,
+          label: "Price Per Month",
+          placeholder: "15000",
+          value: formData.pricePerMonth,
+        };
+
+      default:
+        return {
+          name: "pricePerDay" as const,
+          label: "Price Per Day",
+          placeholder: "1000",
+          value: formData.pricePerDay,
+        };
+    }
+  };
+
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -104,11 +141,19 @@ export default function AddEquipmentForm() {
       return;
     }
 
+    const selectedPrice = getPriceField().value;
+
+    if (!selectedPrice || Number(selectedPrice) <= 0) {
+      setError("Please enter a valid rental price.");
+      return;
+    }
+
     try {
       setUploading(true);
 
-      const uploadedImages = await uploadEquipmentImages(files);
-      setImages(uploadedImages);
+      const uploadedImages: EquipmentImage[] =
+        await uploadEquipmentImages(files);
+
       setUploading(false);
       setSubmitting(true);
 
@@ -118,7 +163,8 @@ export default function AddEquipmentForm() {
         category: formData.category,
         brand: formData.brand.trim(),
         model: formData.model.trim(),
-        pricePerDay: Number(formData.pricePerDay),
+        rentalType: formData.rentalType,
+        [getPriceField().name]: Number(selectedPrice),
         securityDeposit: Number(formData.securityDeposit || 0),
         condition: formData.condition,
         images: uploadedImages,
@@ -149,21 +195,8 @@ export default function AddEquipmentForm() {
         "Equipment submitted successfully! Waiting for admin approval."
       );
 
-      setFormData({
-        title: "",
-        description: "",
-        category: "",
-        brand: "",
-        model: "",
-        pricePerDay: "",
-        securityDeposit: "",
-        condition: "good",
-        city: "",
-        address: "",
-      });
-
+      setFormData(initialFormData);
       setFiles([]);
-      setImages([]);
     } catch (err) {
       setError(
         err instanceof Error
@@ -175,6 +208,8 @@ export default function AddEquipmentForm() {
       setSubmitting(false);
     }
   };
+
+  const priceField = getPriceField();
 
   return (
     <div className="mx-auto w-full max-w-3xl rounded-xl border bg-white p-6 shadow-sm">
@@ -282,16 +317,34 @@ export default function AddEquipmentForm() {
 
           <div>
             <label className="mb-1 block text-sm font-medium">
-              Price Per Day
+              Rental Type
+            </label>
+            <select
+              required
+              name="rentalType"
+              value={formData.rentalType}
+              onChange={handleChange}
+              className="w-full rounded-lg border p-3"
+            >
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">
+              {priceField.label}
             </label>
             <input
+              key={priceField.name}
               required
               min="1"
               type="number"
-              name="pricePerDay"
-              value={formData.pricePerDay}
+              name={priceField.name}
+              value={priceField.value}
               onChange={handleChange}
-              placeholder="1000"
+              placeholder={priceField.placeholder}
               className="w-full rounded-lg border p-3"
             />
           </div>

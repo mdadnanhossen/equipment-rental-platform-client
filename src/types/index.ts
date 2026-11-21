@@ -106,6 +106,6 @@ export interface TUser {
 
 export interface TDashboardSidebarItem {
   title: string;
-  url: string;
+  href: string;
   icon: React.ElementType;
 }

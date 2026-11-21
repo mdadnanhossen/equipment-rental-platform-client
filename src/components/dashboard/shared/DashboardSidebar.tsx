@@ -120,6 +120,11 @@ const roleBasedSidebarItems: Record<
       icon: CalendarCheck,
     },
     {
+      title: "Payment History",
+      href: "/dashboard/owner/payment-history",
+      icon: CreditCard,
+    },
+    {
       title: "My Profile",
       href: "/dashboard/owner/profile",
       icon: UserRound,
@@ -147,6 +152,11 @@ const roleBasedSidebarItems: Record<
       title: "All Rentals",
       href: "/dashboard/admin/rentals",
       icon: CalendarCheck,
+    },
+    {
+      title: "Payments",
+      href: "/dashboard/admin/payments",
+      icon: CreditCard,
     },
     {
       title: "My Profile",
