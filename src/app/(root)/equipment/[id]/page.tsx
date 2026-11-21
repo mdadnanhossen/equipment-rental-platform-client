@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import type { Equipment } from "@/types/equipment";
 import RentalRequestForm from "@/components/equipment/RentalRequestForm";
+import FavoriteButton from "@/components/equipment/favorite-button";
 import { getEquipmentById } from "@/lib/api/equipment";
 
 export default function EquipmentDetailsPage() {
@@ -128,13 +129,19 @@ export default function EquipmentDetailsPage() {
         {/* Details */}
         <div className="space-y-6">
           <div>
-            <p className="text-sm font-medium text-gray-500">
-              {equipment.category}
-            </p>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-medium text-gray-500">
+                  {equipment.category}
+                </p>
 
-            <h1 className="mt-2 text-3xl font-bold">
-              {equipment.title}
-            </h1>
+                <h1 className="mt-2 text-3xl font-bold">
+                  {equipment.title}
+                </h1>
+              </div>
+
+              <FavoriteButton equipmentId={equipment._id} />
+            </div>
 
             <p className="mt-3 text-gray-500">
               {equipment.location.city},{" "}
@@ -143,9 +150,15 @@ export default function EquipmentDetailsPage() {
           </div>
 
           <div className="rounded-xl border p-5">
-            <p className="text-sm text-gray-500">
-              Rental Price
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-gray-500">
+                Rental Price
+              </p>
+
+              <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium capitalize">
+                {equipment.rentalType || "daily"} rental
+              </span>
+            </div>
 
             <p className="mt-1 text-3xl font-bold">
               ৳{equipment.pricePerDay}
@@ -154,11 +167,20 @@ export default function EquipmentDetailsPage() {
               </span>
             </p>
 
-            {equipment.securityDeposit !== undefined && (
-              <p className="mt-3 text-sm text-gray-500">
-                Security Deposit: ৳{equipment.securityDeposit}
+            <div className="mt-3 space-y-1 text-sm text-gray-500">
+              <p>
+                Available Quantity:{" "}
+                <span className="font-medium text-gray-700">
+                  {equipment.quantity || 1} unit(s)
+                </span>
               </p>
-            )}
+
+              {equipment.securityDeposit !== undefined && (
+                <p>
+                  Security Deposit: ৳{equipment.securityDeposit}
+                </p>
+              )}
+            </div>
           </div>
 
           <div>
@@ -193,6 +215,18 @@ export default function EquipmentDetailsPage() {
             </div>
 
             <div className="flex justify-between gap-3 text-sm">
+              <span className="text-gray-500">Rental Type</span>
+              <span className="capitalize">
+                {equipment.rentalType || "daily"}
+              </span>
+            </div>
+
+            <div className="flex justify-between gap-3 text-sm">
+              <span className="text-gray-500">Quantity</span>
+              <span>{equipment.quantity || 1} unit(s)</span>
+            </div>
+
+            <div className="flex justify-between gap-3 text-sm">
               <span className="text-gray-500">Owner</span>
               <span>{equipment.ownerName}</span>
             </div>
@@ -209,6 +243,18 @@ export default function EquipmentDetailsPage() {
                 {equipment.availability}
               </span>
             </div>
+          </div>
+
+          {/* Rental terms & conditions */}
+          <div className="rounded-xl border p-5">
+            <h2 className="text-lg font-semibold">
+              Rental Terms &amp; Conditions
+            </h2>
+
+            <p className="mt-3 whitespace-pre-line leading-7 text-gray-600">
+              {equipment.rentalTerms?.trim() ||
+                "No specific terms provided by the owner. Standard marketplace rules apply: return the equipment on time, in the same condition, and pay the security deposit upfront."}
+            </p>
           </div>
 
           {equipment.availability === "available" ? (

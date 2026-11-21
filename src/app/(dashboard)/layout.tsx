@@ -47,11 +47,6 @@ async function AuthenticatedDashboard({
   // Validate role
   const role = session.user.role;
 
-  console.log("Dashboard User:", {
-    email: session.user.email,
-    role,
-  });
-
   if (
     role !== "admin" &&
     role !== "owner" &&

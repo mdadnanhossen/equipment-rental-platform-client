@@ -3,9 +3,7 @@ import {
   CalendarRange,
   ClipboardList,
   Heart,
-  Info,
   LayoutDashboard,
-  Mail,
   Package,
   Plus,
   Truck,
@@ -24,43 +22,41 @@ export interface NavLink {
   exact?: boolean;
 }
 
-/** Public marketing/support links shown in the main navigation. */
+/** Public links shown in the main navigation (only routes that exist). */
 export const PUBLIC_LINKS: NavLink[] = [
   { label: "Home", href: "/", icon: Truck, exact: true },
   { label: "All Equipment", href: "/equipment", icon: Package },
-  { label: "How It Works", href: "/how-it-works", icon: Info },
-  { label: "About Us", href: "/about", icon: Users },
-  { label: "Contact", href: "/contact", icon: Mail },
 ];
 
 /**
  * Dashboard navigation per role. Read from the Better Auth session only —
- * never from localStorage or hardcoded state.
+ * never from localStorage or hardcoded state. Hrefs mirror the sidebar
+ * (`DashboardSidebar.tsx`) so both menus always agree.
  */
 export const ROLE_NAV: Record<UserRole, NavLink[]> = {
   customer: [
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, exact: true },
-    { label: "My Rentals", href: "/dashboard/rentals", icon: ClipboardList },
-    { label: "Favorites", href: "/dashboard/favorites", icon: Heart },
-    { label: "My Profile", href: "/profile", icon: UserRound },
+    { label: "Dashboard", href: "/dashboard/customer", icon: LayoutDashboard, exact: true },
+    { label: "My Rentals", href: "/dashboard/customer/rentals", icon: ClipboardList },
+    { label: "Favorites", href: "/dashboard/customer/favorites", icon: Heart },
+    { label: "My Profile", href: "/dashboard/customer/profile", icon: UserRound },
   ],
   owner: [
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, exact: true },
-    { label: "Add Equipment", href: "/dashboard/equipment/new", icon: Plus },
-    { label: "My Equipment", href: "/dashboard/equipment", icon: Truck },
+    { label: "Dashboard", href: "/dashboard/owner", icon: LayoutDashboard, exact: true },
+    { label: "Add Equipment", href: "/dashboard/owner/equipment/add", icon: Plus },
+    { label: "My Equipment", href: "/dashboard/owner/equipment", icon: Truck },
     {
       label: "My Equipment Rentals",
-      href: "/dashboard/equipment/rentals",
+      href: "/dashboard/owner/rentals",
       icon: CalendarRange,
     },
-    { label: "My Profile", href: "/profile", icon: UserRound },
+    { label: "My Profile", href: "/dashboard/owner/profile", icon: UserRound },
   ],
   admin: [
-    { label: "Admin Dashboard", href: "/dashboard", icon: LayoutDashboard, exact: true },
-    { label: "All Users", href: "/dashboard/users", icon: Users },
-    { label: "All Equipment", href: "/dashboard/equipment", icon: Package },
-    { label: "All Rentals", href: "/dashboard/rentals", icon: ClipboardList },
-    { label: "My Profile", href: "/profile", icon: UserRound },
+    { label: "Admin Dashboard", href: "/dashboard/admin", icon: LayoutDashboard, exact: true },
+    { label: "All Users", href: "/dashboard/admin/users", icon: Users },
+    { label: "All Equipment", href: "/dashboard/admin/equipment", icon: Package },
+    { label: "All Rentals", href: "/dashboard/admin/rentals", icon: ClipboardList },
+    { label: "My Profile", href: "/dashboard/admin/profile", icon: UserRound },
   ],
 };
 
@@ -73,9 +69,9 @@ export const ROLE_LABEL: Record<UserRole, string> = {
 
 /**
  * Settings route used by the account dropdown. Set to `null` to hide the
- * "Settings" item (it is only rendered when the route exists).
+ * "Settings" item (no /settings route exists yet).
  */
-export const SETTINGS_HREF: string | null = "/settings";
+export const SETTINGS_HREF: string | null = null;
 
 export function isUserRole(value: unknown): value is UserRole {
   return value === "customer" || value === "owner" || value === "admin";
@@ -96,8 +92,8 @@ export function navForRole(role: UserRole | null | undefined): NavLink[] {
  */
 export function accountDropdownNav(role: UserRole | null | undefined): NavLink[] {
   const links = navForRole(role);
-  const profile = links.find((link) => link.href === "/profile");
-  const dashboard = links.find((link) => link.href === "/dashboard");
+  const profile = links.find((link) => link.href.endsWith("/profile"));
+  const dashboard = links.find((link) => link.exact);
   const rest = links.filter((link) => link !== profile && link !== dashboard);
 
   return [

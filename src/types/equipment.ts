@@ -29,7 +29,14 @@ export interface Equipment {
   category: string;
   brand: string;
   model: string;
+  /** Single rental price used for every rental type (per day). */
   pricePerDay: number;
+  /** daily | weekly | monthly label for the listing. */
+  rentalType: RentalType;
+  /** Available quantity of units. */
+  quantity: number;
+  /** Free-text rental terms & conditions shown at booking. */
+  rentalTerms: string;
   securityDeposit: number;
   condition: EquipmentCondition;
   images: EquipmentImage[];
@@ -49,6 +56,9 @@ export interface Equipment {
 export interface EquipmentQuery {
   search?: string;
   category?: string;
+  location?: string;
+  rentalType?: RentalType;
+  availability?: EquipmentAvailability;
   minPrice?: number;
   maxPrice?: number;
   sortBy?: "newest" | "price-low" | "price-high";
@@ -74,9 +84,10 @@ export interface CreateEquipmentPayload {
   brand: string;
   model: string;
   rentalType: RentalType;
-  pricePerDay?: number;
-  pricePerWeek?: number;
-  pricePerMonth?: number;
+  /** Single rental price field (per day) for every rental type. */
+  pricePerDay: number;
+  quantity: number;
+  rentalTerms: string;
   securityDeposit: number;
   condition: EquipmentCondition;
   images: EquipmentImage[];

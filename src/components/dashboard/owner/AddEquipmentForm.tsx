@@ -30,9 +30,10 @@ const initialFormData = {
   brand: "",
   model: "",
   rentalType: "daily" as RentalType,
+  // Single rental price for every rental type (per day).
   pricePerDay: "",
-  pricePerWeek: "",
-  pricePerMonth: "",
+  quantity: "1",
+  rentalTerms: "",
   securityDeposit: "",
   condition: "good" as EquipmentCondition,
   city: "",
@@ -101,34 +102,6 @@ export default function AddEquipmentForm() {
     );
   };
 
-  const getPriceField = () => {
-    switch (formData.rentalType) {
-      case "weekly":
-        return {
-          name: "pricePerWeek" as const,
-          label: "Price Per Week",
-          placeholder: "5000",
-          value: formData.pricePerWeek,
-        };
-
-      case "monthly":
-        return {
-          name: "pricePerMonth" as const,
-          label: "Price Per Month",
-          placeholder: "15000",
-          value: formData.pricePerMonth,
-        };
-
-      default:
-        return {
-          name: "pricePerDay" as const,
-          label: "Price Per Day",
-          placeholder: "1000",
-          value: formData.pricePerDay,
-        };
-    }
-  };
-
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -141,10 +114,15 @@ export default function AddEquipmentForm() {
       return;
     }
 
-    const selectedPrice = getPriceField().value;
-
-    if (!selectedPrice || Number(selectedPrice) <= 0) {
+    if (!formData.pricePerDay || Number(formData.pricePerDay) <= 0) {
       setError("Please enter a valid rental price.");
+      return;
+    }
+
+    const quantity = Number(formData.quantity || 1);
+
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      setError("Quantity must be a whole number of 1 or more.");
       return;
     }
 
@@ -164,7 +142,10 @@ export default function AddEquipmentForm() {
         brand: formData.brand.trim(),
         model: formData.model.trim(),
         rentalType: formData.rentalType,
-        [getPriceField().name]: Number(selectedPrice),
+        // ONE price field for every rental type.
+        pricePerDay: Number(formData.pricePerDay),
+        quantity,
+        rentalTerms: formData.rentalTerms.trim(),
         securityDeposit: Number(formData.securityDeposit || 0),
         condition: formData.condition,
         images: uploadedImages,
@@ -208,8 +189,6 @@ export default function AddEquipmentForm() {
       setSubmitting(false);
     }
   };
-
-  const priceField = getPriceField();
 
   return (
     <div className="mx-auto w-full max-w-3xl rounded-xl border bg-white p-6 shadow-sm">
@@ -334,17 +313,37 @@ export default function AddEquipmentForm() {
 
           <div>
             <label className="mb-1 block text-sm font-medium">
-              {priceField.label}
+              Rental Price (৳)
             </label>
             <input
-              key={priceField.name}
               required
               min="1"
               type="number"
-              name={priceField.name}
-              value={priceField.value}
+              name="pricePerDay"
+              value={formData.pricePerDay}
               onChange={handleChange}
-              placeholder={priceField.placeholder}
+              placeholder="1000"
+              className="w-full rounded-lg border p-3"
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              Single price used for every rental type, charged per
+              day of rental.
+            </p>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">
+              Available Quantity
+            </label>
+            <input
+              required
+              min="1"
+              step="1"
+              type="number"
+              name="quantity"
+              value={formData.quantity}
+              onChange={handleChange}
+              placeholder="1"
               className="w-full rounded-lg border p-3"
             />
           </div>
@@ -363,6 +362,24 @@ export default function AddEquipmentForm() {
               className="w-full rounded-lg border p-3"
             />
           </div>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium">
+            Rental Terms &amp; Conditions
+          </label>
+          <textarea
+            name="rentalTerms"
+            value={formData.rentalTerms}
+            onChange={handleChange}
+            rows={4}
+            placeholder="e.g. Security deposit required upfront. Late returns incur an extra day's charge."
+            className="w-full rounded-lg border p-3"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            Shown to customers on the equipment page and inside the
+            booking modal.
+          </p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">

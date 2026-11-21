@@ -232,11 +232,11 @@ const DashboardSidebar = ({ user }: { user: TUser | null }) => {
               size="lg"
               tooltip="Rentora"
               render={
-                <Link
-                  href={role ? `/dashboard/${role}` : "/"}
-                  onClick={closeMobile}
-                />
-              }
+  <Link
+    href="/"
+    onClick={closeMobile}
+  />
+}
             >
               <div className="grid aspect-square size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
                 <House />

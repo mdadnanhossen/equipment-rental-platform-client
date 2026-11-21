@@ -55,6 +55,11 @@ export async function getAllEquipment(
 
   if (query.search) params.set("search", query.search);
   if (query.category) params.set("category", query.category);
+  if (query.location) params.set("location", query.location);
+  if (query.rentalType) params.set("rentalType", query.rentalType);
+  if (query.availability) {
+    params.set("availability", query.availability);
+  }
   if (query.minPrice !== undefined) {
     params.set("minPrice", String(query.minPrice));
   }
