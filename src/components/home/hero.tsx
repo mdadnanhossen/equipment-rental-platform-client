@@ -33,7 +33,7 @@ function formatPrice(value: number) {
   return `৳${value.toLocaleString("en-US")}`;
 }
 
-/** Placeholder shown while the hero imagery request resolves. */
+
 function HeroImageSkeleton() {
   return (
     <div
