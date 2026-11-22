@@ -76,7 +76,7 @@ export function SignUpForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  // Generate and clean up image preview URL.
+  
   React.useEffect(() => {
     if (!selectedImage) {
       setPreviewUrl("");
