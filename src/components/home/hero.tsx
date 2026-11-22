@@ -178,7 +178,7 @@ export function Hero() {
           </Reveal>
         </div>
 
-        {/* Real-listing image composition */}
+        {/* Real-listing images composition */}
         <Reveal delay={200} className="relative">
           <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
             {loading ? (
