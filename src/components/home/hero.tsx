@@ -56,7 +56,7 @@ export function Hero() {
         const result = await getAllEquipment({ limit: 3, sortBy: "newest" });
         if (!cancelled) setItems(result.data ?? []);
       } catch {
-        // Fallback panel is rendered instead — no console noise.
+        
         if (!cancelled) setItems([]);
       } finally {
         if (!cancelled) setLoading(false);
