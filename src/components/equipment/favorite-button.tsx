@@ -34,7 +34,7 @@ export default function FavoriteButton({
 
   const isAuthenticated = Boolean(session);
 
-  // Load the current favorite state for signed-in customers.
+  
   useEffect(() => {
     if (isPending || !isAuthenticated || role !== "customer") {
       return;

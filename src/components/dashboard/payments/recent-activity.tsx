@@ -14,10 +14,7 @@ interface RecentPaymentActivityProps {
   className?: string;
 }
 
-/**
- * Compact activity feed — deliberately styled differently from the main
- * transactions table so the two sections never read as duplicates.
- */
+
 export function RecentPaymentActivity({
   records,
   className,

@@ -411,7 +411,7 @@ export default function AddEquipmentForm() {
             />
           </div>
         </div>
-
+  
         <div>
           <label className="mb-2 block text-sm font-medium">
             Equipment Images (Maximum 5)
