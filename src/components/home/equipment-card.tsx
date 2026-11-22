@@ -21,10 +21,7 @@ function formatPrice(value: number) {
   return `৳${value.toLocaleString("en-US")}`;
 }
 
-/**
- * Featured listing card. The whole card links to the public detail route —
- * the same navigation the existing equipment grid uses.
- */
+
 export function EquipmentCard({ equipment }: EquipmentCardProps) {
   const imageUrl = equipment.images?.[0]?.url;
   const available = equipment.availability === "available";
