@@ -285,7 +285,7 @@ export function SignInForm() {
           )}
         </div>
 
-        {/* Remember Me */}
+       
         <label className="flex cursor-pointer items-center gap-2.5 text-sm text-[#334155]">
           <Checkbox
             checked={values.remember}
