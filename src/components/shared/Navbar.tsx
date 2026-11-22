@@ -34,7 +34,7 @@ function Logo() {
   );
 }
 
-/** Shown while the session request is still resolving. */
+
 function AuthActionsSkeleton() {
   return (
     <div className="hidden items-center gap-2 md:flex" aria-hidden="true">
