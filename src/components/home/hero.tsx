@@ -43,12 +43,7 @@ function HeroImageSkeleton() {
   );
 }
 
-/**
- * Midnight navy hero: headline, dual CTAs and a real-listing image
- * composition fetched from the public equipment API (limit 3). When the API
- * is unreachable the copy still renders and the visual falls back to a
- * designed panel, so the section never breaks.
- */
+
 export function Hero() {
   const [items, setItems] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
