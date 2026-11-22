@@ -215,7 +215,7 @@ const DashboardSidebar = ({ user }: { user: TUser | null }) => {
     try {
       await signOut();
       setOpenMobile(false);
-      router.replace("/signin");
+      router.replace("/");
       router.refresh();
     } catch (error) {
       console.error("Sign out failed:", error);

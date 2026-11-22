@@ -50,7 +50,7 @@ export function useSignOut(): SignOutState {
 
     try {
       await signOut();
-      router.replace("/signin");
+      router.replace("/");
       router.refresh();
     } catch (error) {
       console.error("Sign out failed:", error);

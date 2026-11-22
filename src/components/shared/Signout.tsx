@@ -6,7 +6,8 @@ const SignoutCompo = () => {
   const router = useRouter();
   const handleSignOut = async () => {
     await signOut();
-    router.push("/signin");
+    router.push("/");
+    router.refresh();
   };
   return (
     <button

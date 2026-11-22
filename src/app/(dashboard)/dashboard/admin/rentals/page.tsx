@@ -292,7 +292,9 @@ export default function RentalPage() {
             <Select
               value={status}
               onValueChange={(value) => {
-                setStatus(value);
+                if (value !== null) {
+                  setStatus(value);
+                }
                 setPage(1);
               }}
             >

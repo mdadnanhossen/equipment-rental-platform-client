@@ -33,6 +33,7 @@ import type {
   PaymentRecord,
   PaymentSortKey,
   PaymentStatus,
+  PaymentStatusFilter,
 } from "@/components/dashboard/payments/types";
 
 const API_URL =

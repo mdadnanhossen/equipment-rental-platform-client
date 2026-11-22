@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Suspense } from "react";
 import { LogIn, Truck } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
@@ -81,7 +82,19 @@ export function Navbar() {
           <Logo />
         </div>
 
-        <DesktopNavigation />
+        {/* usePathname() suspends on dynamic routes without
+            generateStaticParams, so these need their own boundaries to
+            keep the static shell prerenderable. */}
+        <Suspense
+          fallback={
+            <nav
+              aria-label="Main"
+              className="hidden h-full flex-1 items-center justify-center gap-1 lg:flex"
+            />
+          }
+        >
+          <DesktopNavigation />
+        </Suspense>
 
         <div className="flex h-full flex-1 items-center justify-end gap-2 sm:gap-3">
           {isPending ? (
@@ -91,7 +104,11 @@ export function Navbar() {
           ) : (
             <LoggedOutActions />
           )}
-          <MobileNavigation />
+          <Suspense
+            fallback={<div className="size-10 lg:hidden" aria-hidden="true" />}
+          >
+            <MobileNavigation />
+          </Suspense>
         </div>
       </div>
 
