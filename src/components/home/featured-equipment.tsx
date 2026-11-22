@@ -36,11 +36,7 @@ function CardSkeleton() {
   );
 }
 
-/**
- * Featured equipment grid — fetches exactly 6 approved listings from the
- * public API using the backend's MongoDB `limit` support. Loading, error and
- * empty states are all handled locally; no data is ever invented.
- */
+
 export function FeaturedEquipment() {
   const [items, setItems] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
