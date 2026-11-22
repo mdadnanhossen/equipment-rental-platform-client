@@ -57,10 +57,7 @@ function DesktopNavLink({ link, pathname }: { link: NavLink; pathname: string })
   );
 }
 
-/**
- * Second row shown (desktop only) while signed in: the role-based dashboard
- * links derived from the real session role, with a role badge.
- */
+
 export function DesktopDashboardSubnav() {
   const pathname = usePathname();
   const { role } = useAuth();
